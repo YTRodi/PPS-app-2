@@ -1,13 +1,18 @@
-import { useNavigation } from '@react-navigation/native';
 import { Button, Text, View } from 'react-native';
 
 const Home = () => {
-  const { navigate } = useNavigation();
-
   return (
     <View>
       <Text>Home screen</Text>
-      <Button title='go to Login' onPress={() => navigate('Login')} />
+      {/* <Button title='go to Login' onPress={() => navigate('Login')} /> */}
+      <Button
+        title='go to Login'
+        onPress={() => {
+          fetch('https://jsonplaceholder.typicode.com/todos/1')
+            .then(response => response.json())
+            .then(json => console.log(json));
+        }}
+      />
     </View>
   );
 };

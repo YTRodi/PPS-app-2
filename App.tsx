@@ -1,11 +1,18 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { StackNavigator } from './src/navigator';
+import AppProviders from './src/context';
+import { useAuth } from './src/context/AuthProvider';
+import AuthenticatedApp from './src/AuthenticatedApp';
+import UnauthenticatedApp from './src/UnauthenticatedApp';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StackNavigator></StackNavigator>
-    </NavigationContainer>
+    <AppProviders>
+      <AppState />
+    </AppProviders>
   );
+}
+
+function AppState() {
+  const { user } = useAuth();
+  return user ? <AuthenticatedApp /> : <UnauthenticatedApp />;
 }

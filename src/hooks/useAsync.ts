@@ -1,5 +1,5 @@
 import { useReducer, useCallback, useRef } from 'react';
-import { useSafeDispatch } from '.';
+import useSafeDispatch from './useSafeDispatch';
 
 interface AsyncState {
   status: 'idle' | 'pending' | 'resolved' | 'rejected';
