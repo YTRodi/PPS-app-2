@@ -5,15 +5,15 @@ import React, {
   useMemo,
   useContext,
 } from 'react';
-import { SafeAreaView, Text } from 'react-native';
 import { useAsync } from '../../hooks';
 import * as auth from '../../auth';
+import { FullPageErrorFallback, FullPageSpinner } from '../../components';
 
 export interface AuthContextProps {
   user: auth.User | null;
   login: (form: auth.AuthProps) => Promise<any>;
   register: (form: auth.AuthProps) => Promise<any>;
-  logout: () => Promise<any>;
+  logout: () => void;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -28,41 +28,31 @@ const AuthProvider: React.FC = props => {
     isIdle,
     isError,
     isSuccess,
+    run,
     setData,
-    setError,
   } = useAsync();
 
   useEffect(() => {
-    const unsubscribe = auth.getCurrentUser(setData);
-    return unsubscribe;
-  }, []);
+    const appDataPromise = auth.getCurrentUser();
+    run(appDataPromise);
+  }, [run]);
 
   const login = useCallback(
     (form: auth.AuthProps) =>
-      auth.login(form).then(
-        ({ user }) => setData(user),
-        error => setError(error)
-      ),
-    [setData, setError]
+      auth.login(form).then(({ user }) => setData(user)),
+    [setData]
   );
 
   const register = useCallback(
     (form: auth.AuthProps) =>
-      auth.register(form).then(
-        ({ user }) => setData(user),
-        error => setError(error)
-      ),
+      auth.register(form).then(({ user }) => setData(user)),
     [setData]
   );
 
-  const logout = useCallback(
-    () =>
-      auth.logout().then(
-        () => {},
-        error => setError(error)
-      ),
-    [setData]
-  );
+  const logout = useCallback(() => {
+    setData(null);
+    return auth.logout();
+  }, [setData]);
 
   const value = useMemo<AuthContextProps>(
     () => ({ user, login, register, logout }),
@@ -70,24 +60,11 @@ const AuthProvider: React.FC = props => {
   );
 
   if (isLoading || isIdle) {
-    // return <FullPageSpinner />;
-    return (
-      <SafeAreaView>
-        {/* // TODO: crear componente Spinner */}
-        <Text>LOADING...</Text>
-      </SafeAreaView>
-    );
+    return <FullPageSpinner />;
   }
 
   if (isError) {
-    // return <FullPageErrorFallback error={error} />;
-    return (
-      <SafeAreaView>
-        <Text>ERROR...</Text>
-        {/* // TODO: mostrar un cartel de error de acuerdo al campo error.code (ejemplo: auth/email-already-in-use) */}
-        <Text>{JSON.stringify(error, null, 2)}</Text>
-      </SafeAreaView>
-    );
+    return <FullPageErrorFallback error={error} />;
   }
 
   if (isSuccess) {
