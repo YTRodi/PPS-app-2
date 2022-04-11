@@ -1,8 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import {
+  AuthError,
+  AuthErrorCodes,
   User as firebaseUser,
   getAuth,
-  NextOrObserver,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -30,8 +31,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-function getCurrentUser(nextOrObserver: NextOrObserver<firebaseUser>) {
-  return onAuthStateChanged(auth, nextOrObserver);
+function getCurrentUser() {
+  return new Promise<User | null>((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      user => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
 }
 
 function login({ email, password }: AuthProps) {
@@ -46,4 +56,13 @@ function logout() {
   return signOut(auth);
 }
 
-export { User, AuthProps, getCurrentUser, login, register, logout };
+export {
+  AuthError,
+  AuthErrorCodes,
+  User,
+  AuthProps,
+  getCurrentUser,
+  login,
+  register,
+  logout,
+};
