@@ -4,7 +4,7 @@ import useSafeDispatch from './useSafeDispatch';
 interface AsyncState {
   status: 'idle' | 'pending' | 'resolved' | 'rejected';
   data: any | null;
-  error: Error | null;
+  error: any | null;
 }
 
 type AsyncAction =
@@ -74,18 +74,9 @@ function useAsync(initialState?: any) {
 
       dispatch({ type: 'pending' });
 
-      promise.then(
-        data => {
-          setData(data);
-          return data;
-        },
-        error => {
-          setError(error);
-          return Promise.reject(error);
-        }
-      );
+      promise.then(setData, setError);
     },
-    [dispatch]
+    [dispatch, setData, setError]
   );
 
   return {
