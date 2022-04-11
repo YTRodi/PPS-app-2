@@ -1,31 +1,26 @@
 import { SafeAreaView, Text, Button } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
+import { FullPageSpinner } from './components';
 import { useAuth } from './context/AuthProvider';
 import { useAsync } from './hooks';
+import { mapAuthError } from './helpers';
 
 // TODO: add Auth Stack (Login, Register, recovery password, etc)
 const UnauthenticatedApp = () => {
   const { login, register } = useAuth();
   const { isLoading, isError, error, run } = useAsync();
+  const toast = useToast();
 
   if (isLoading) {
-    // TODO: crear componente Spinner
-    return (
-      <SafeAreaView>
-        <Text>LOADING [register / login]...</Text>
-      </SafeAreaView>
-    );
+    return <FullPageSpinner />;
   }
 
   if (isError) {
-    // TODO: mostrar toast / alert
-    return (
-      <SafeAreaView>
-        <Text>ERROR...</Text>
-        <Text>{JSON.stringify(error, null, 2)}</Text>
-      </SafeAreaView>
-    );
+    const errorMessage = mapAuthError(error);
+    toast.show(errorMessage, { type: 'danger' });
   }
 
+  // TODO: add form and create FormGroup component
   return (
     <SafeAreaView>
       <Text style={{ fontSize: 30 }}>UnauthenticatedApp</Text>
