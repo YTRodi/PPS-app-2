@@ -5,12 +5,7 @@ type Props = React.ComponentProps<typeof PaperButton> & {
   iconPosition?: 'start' | 'end';
 };
 
-const Button = ({
-  style,
-  children,
-  iconPosition = 'start',
-  ...props
-}: Props) => {
+function Button({ style, children, iconPosition = 'start', ...props }: Props) {
   return (
     <PaperButton
       style={[style]}
@@ -22,6 +17,6 @@ const Button = ({
       {children}
     </PaperButton>
   );
-};
+}
 
 export default Button;
