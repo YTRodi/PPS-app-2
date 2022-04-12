@@ -28,7 +28,6 @@ const AuthSchema = Yup.object().shape({
 
 const initialValues = { email: '', password: '' };
 
-// TODO: add Auth Stack (Login, Register, recovery password, etc)
 const UnauthenticatedApp = () => {
   const { login, register } = useAuth();
   const { isLoading, isError, error, run } = useAsync();
