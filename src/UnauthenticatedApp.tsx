@@ -4,8 +4,8 @@ import {
   Headline,
   TextInput,
   Button,
-  Subheading,
   Paragraph,
+  Caption,
 } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 
@@ -30,9 +30,10 @@ const initialValues = { email: '', password: '' };
 
 // TODO: add Auth Stack (Login, Register, recovery password, etc)
 const UnauthenticatedApp = () => {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const { isLoading, isError, error, run } = useAsync();
   const toast = useToast();
+  const [isLoginScreen, setIsLoginScreen] = useToggle(true);
   const [hidePassword, toggleHidePassword] = useToggle(true);
   const {
     values: formValues,
@@ -46,7 +47,8 @@ const UnauthenticatedApp = () => {
   } = useFormik({
     initialValues,
     validationSchema: AuthSchema,
-    onSubmit: formValues => run(login(formValues)),
+    onSubmit: formValues =>
+      isLoginScreen ? run(login(formValues)) : run(register(formValues)),
   });
 
   if (isError) {
@@ -76,8 +78,9 @@ const UnauthenticatedApp = () => {
 
   return (
     <View style={styles.container}>
-      <Headline style={styles.text}>PPS - App 2</Headline>
-      <Subheading style={styles.text}>Login</Subheading>
+      <Headline style={styles.title}>
+        {isLoginScreen ? 'Login' : 'Registro'}
+      </Headline>
 
       <View style={styles.formGroup}>
         <TextInput
@@ -134,29 +137,46 @@ const UnauthenticatedApp = () => {
         loading={isLoading || isValidating}
         onPress={handleSubmit}
       >
-        Iniciar sesión
+        {isLoginScreen ? 'Iniciar sesión' : 'Registrarse'}
       </Button>
+
+      <View style={styles.captionContainer}>
+        <Caption>
+          {isLoginScreen ? '¿No tienes cuenta?' : '¿Ya tienes una cuenta?'}{' '}
+          <Caption style={styles.captionText} onPress={setIsLoginScreen}>
+            {isLoginScreen ? 'Regístrate!' : 'Inicia sesión!'}
+          </Caption>
+        </Caption>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  text: {
-    color: theme.colors.primary,
-  },
-  textError: {
-    color: theme.colors.error,
-  },
   container: {
     flex: 1,
     marginHorizontal: 24,
     justifyContent: 'center',
+  },
+  title: {
+    color: theme.colors.primary,
+    marginBottom: 16,
+  },
+  textError: {
+    color: theme.colors.error,
   },
   formGroup: {
     marginBottom: 16,
   },
   button: {
     marginTop: 18,
+  },
+  captionContainer: {
+    marginTop: 8,
+  },
+  captionText: {
+    color: theme.colors.primary,
+    fontWeight: 'bold',
   },
 });
 
