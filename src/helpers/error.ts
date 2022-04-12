@@ -13,6 +13,8 @@ function mapAuthError(error: AuthError): string {
       [AuthErrorCodes.USER_DISABLED]: 'El usuario está deshabilitado',
       [AuthErrorCodes.USER_DELETED]: 'No se encontró el usuario',
       [AuthErrorCodes.INVALID_PASSWORD]: 'Contraseña inválida',
+      [AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER]:
+        'El acceso a esta cuenta se ha desactivado temporalmente debido a muchos intentos fallidos de inicio de sesión.',
     }[error.code] ?? ''
   );
 }
