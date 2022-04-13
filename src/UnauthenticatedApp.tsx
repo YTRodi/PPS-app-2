@@ -96,7 +96,7 @@ const UnauthenticatedApp = () => {
           autoCapitalize='none'
           label='Correo electrónico'
           placeholder='Correo electrónico'
-          defaultValue={formValues.email}
+          value={formValues.email}
           onChangeText={handleChange('email')}
           onBlur={handleBlur('email')}
           left={<TextInput.Icon name='email' color={getInputEmailIconColor} />}
@@ -115,7 +115,7 @@ const UnauthenticatedApp = () => {
           autoCapitalize='none'
           label='Contraseña'
           placeholder='Contraseña'
-          defaultValue={formValues.password}
+          value={formValues.password}
           onChangeText={handleChange('password')}
           onBlur={handleBlur('password')}
           left={
