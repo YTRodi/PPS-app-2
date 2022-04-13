@@ -43,6 +43,7 @@ const UnauthenticatedApp = () => {
     handleSubmit,
     isValidating,
     isValid,
+    resetForm,
   } = useFormik({
     initialValues,
     validationSchema: AuthSchema,
@@ -74,6 +75,11 @@ const UnauthenticatedApp = () => {
         : theme.colors.placeholder,
     [formErrors, touched]
   );
+
+  function reset() {
+    setIsLoginScreen();
+    resetForm();
+  }
 
   return (
     <View style={styles.container}>
@@ -142,7 +148,7 @@ const UnauthenticatedApp = () => {
       <View style={styles.captionContainer}>
         <Caption>
           {isLoginScreen ? '¿No tienes cuenta?' : '¿Ya tienes una cuenta?'}{' '}
-          <Caption style={styles.captionText} onPress={setIsLoginScreen}>
+          <Caption style={styles.captionText} onPress={reset}>
             {isLoginScreen ? 'Regístrate!' : 'Inicia sesión!'}
           </Caption>
         </Caption>
