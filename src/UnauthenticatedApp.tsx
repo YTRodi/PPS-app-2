@@ -28,7 +28,7 @@ const AuthSchema = Yup.object().shape({
 
 const initialValues = { email: '', password: '' };
 
-const UnauthenticatedApp = () => {
+function UnauthenticatedApp() {
   const { login, register } = useAuth();
   const { isLoading, isError, error, run } = useAsync();
   const toast = useToast();
@@ -155,7 +155,7 @@ const UnauthenticatedApp = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
