@@ -13,7 +13,7 @@ export interface AuthContextProps {
   user: auth.User | null;
   login: (form: auth.AuthProps) => Promise<any>;
   register: (form: auth.AuthProps) => Promise<any>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
